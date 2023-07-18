@@ -30,7 +30,7 @@ router.get("/:id", async (req, res, next) => {
     const { id } = req.params;
     const result = await getContactById(id);
     if (!result) {
-      res.status(404).json({ message: `Contacts with id=${id} not found` });
+      res.status(404).json({ message: `Not found` });
     }
     res.json(result);
   } catch (error) {
