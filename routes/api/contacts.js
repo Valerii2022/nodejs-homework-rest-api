@@ -1,26 +1,33 @@
 import express from "express";
-import { listContacts } from "../../models/contacts.js";
+
+import contactsController from "../../controllers/contacts-controller.js";
+
+import contactsSchemas from "../../schemas/contacts-schemas.js";
+
+import { validateBody } from "../../decorators/index.js";
+
+import { isEmptyBody } from "../../middlewars/index.js";
 
 const router = express.Router();
 
-router.get("/", async (req, res, next) => {
-  res.json(await listContacts());
-});
+router.get("/", contactsController.getAll);
 
-router.get("/:contactId", async (req, res, next) => {
-  res.json({ message: "template message" });
-});
+router.get("/:contactId", contactsController.getById);
 
-router.post("/", async (req, res, next) => {
-  res.json({ message: "template message" });
-});
+router.post(
+  "/",
+  isEmptyBody,
+  validateBody(contactsSchemas.contactsAddSchema),
+  contactsController.add
+);
 
-router.delete("/:contactId", async (req, res, next) => {
-  res.json({ message: "template message" });
-});
+router.delete("/:contactId", contactsController.deleteByid);
 
-router.put("/:contactId", async (req, res, next) => {
-  res.json({ message: "template message" });
-});
+router.put(
+  "/:contactId",
+  isEmptyBody,
+  validateBody(contactsSchemas.moviesAddSchema),
+  contactsController.updateById
+);
 
 export default router;
