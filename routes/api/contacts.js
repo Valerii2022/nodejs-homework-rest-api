@@ -1,5 +1,5 @@
-const express = require("express");
-const { listContacts } = require("../../models/contacts.js");
+import express from "express";
+import { listContacts } from "../../models/contacts.js";
 
 const router = express.Router();
 
@@ -23,4 +23,4 @@ router.put("/:contactId", async (req, res, next) => {
   res.json({ message: "template message" });
 });
 
-module.exports = router;
+export default router;
