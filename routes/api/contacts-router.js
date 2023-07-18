@@ -7,7 +7,6 @@ import {
   updateContact,
 } from "../../models/contacts.js";
 import Joi from "joi";
-import HttpError from "../../helpers/HttpError.js";
 
 const contactsAddSchema = Joi.object({
   name: Joi.string().required(),
@@ -31,7 +30,7 @@ router.get("/:id", async (req, res, next) => {
     const { id } = req.params;
     const result = await getContactById(id);
     if (!result) {
-      throw HttpError(404, `Contacts with id=${id} not found`);
+      res.status(404).json({ message: `Contacts with id=${id} not found` });
     }
     res.json(result);
   } catch (error) {
@@ -43,7 +42,7 @@ router.post("/", async (req, res, next) => {
   try {
     const { error } = contactsAddSchema.validate(req.body);
     if (error) {
-      throw HttpError(400, error.message);
+      res.status(400).json({ message: "missing required name field" });
     }
     const result = await addContact(req.body);
     res.status(201).json(result);
@@ -56,13 +55,13 @@ router.put("/:contactId", async (req, res, next) => {
   try {
     const { error } = contactsAddSchema.validate(req.body);
     if (error) {
-      throw HttpError(400, error.message);
+      res.status(400).json({ message: "missing fields" });
     }
     const { contactId } = req.params;
     const result = await updateContact(contactId, req.body);
     if (!result) {
       console.log(req.params);
-      throw HttpError(404, `Contacts with id=${contactId} not found`);
+      res.status(404).json({ message: "Not found" });
     }
     res.json(result);
   } catch (error) {
@@ -75,10 +74,10 @@ router.delete("/:contactId", async (req, res, next) => {
     const { contactId } = req.params;
     const result = await removeContact(contactId);
     if (!result) {
-      throw HttpError(404, `Contacts with id=${contactId} not found`);
+      res.status(404).json({ message: "Not found" });
     }
     res.json({
-      message: "Delete success",
+      message: "contact deleted",
     });
   } catch (error) {
     next(error);
