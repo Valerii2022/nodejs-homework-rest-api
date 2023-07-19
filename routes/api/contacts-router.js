@@ -6,13 +6,7 @@ import {
   removeContact,
   updateContact,
 } from "../../models/contacts.js";
-import Joi from "joi";
-
-const contactsAddSchema = Joi.object({
-  name: Joi.string().required(),
-  email: Joi.string().required(),
-  phone: Joi.string().required(),
-});
+import contactsAddSchema from "../../schemas/contacts-schema.js";
 
 const router = express.Router();
 
@@ -42,7 +36,8 @@ router.post("/", async (req, res, next) => {
   try {
     const { error } = contactsAddSchema.validate(req.body);
     if (error) {
-      res.status(400).json({ message: "missing required name field" });
+      res.status(400).json({ message: error.message });
+      return;
     }
     const result = await addContact(req.body);
     res.status(201).json(result);
@@ -55,7 +50,8 @@ router.put("/:contactId", async (req, res, next) => {
   try {
     const { error } = contactsAddSchema.validate(req.body);
     if (error) {
-      res.status(400).json({ message: "missing fields" });
+      res.status(400).json({ message: error.message });
+      return;
     }
     const { contactId } = req.params;
     const result = await updateContact(contactId, req.body);
