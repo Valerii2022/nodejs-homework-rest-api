@@ -1,7 +1,7 @@
 import Joi from "joi";
 
 const contactsAddSchema = Joi.object({
-  name: Joi.string().alphanum().min(3).required().messages({
+  name: Joi.string().min(3).required().messages({
     "any.required": `"name" must be exist`,
     "string.min": `"name" should have a minimum length of 3`,
     "string.empty": `"name" cannot be an empty field`,
@@ -26,5 +26,6 @@ const contactsAddSchema = Joi.object({
     })
     .required(),
 });
+const updateFavoriteSchema = Joi.object({ favorite: Joi.boolean().required() });
 
-export default contactsAddSchema;
+export const schemas = { contactsAddSchema, updateFavoriteSchema };
