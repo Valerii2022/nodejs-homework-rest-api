@@ -3,23 +3,23 @@ import { handleMongooseError, validateAtUpdate } from "./hook.js";
 
 const userSchema = new Schema(
   {
-    name: {
+    password: {
       type: String,
-      require: true,
+      required: [true, "Set password for user"],
     },
     email: {
       type: String,
-      require: true,
-      match: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+      required: [true, "Email is required"],
       unique: true,
     },
-    password: {
+    subscription: {
       type: String,
-      minlength: 6,
-      require: true,
+      enum: ["starter", "pro", "business"],
+      default: "starter",
     },
+    token: String,
   },
-  { versionKey: false, timestamps: true }
+  { versionKey: false }
 );
 
 userSchema.pre("findOneAndUpdate", validateAtUpdate);
