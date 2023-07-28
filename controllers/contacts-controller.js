@@ -4,7 +4,12 @@ import { HttpError } from "../helpers/index.js";
 
 const getAll = async (req, res) => {
   const { _id: owner } = req.user;
-  const result = await Contact.find({ owner });
+  const { page = 1, limit = 20 } = req.query;
+  const skip = (page - 1) * limit;
+  const result = await Contact.find({ owner }, "", { skip, limit }).populate(
+    "owner",
+    "email"
+  );
   res.json(result);
 };
 
@@ -36,6 +41,8 @@ const update = async (req, res, next) => {
 
 const updateStatusContact = async (req, res, next) => {
   const { id } = req.params;
+  console.log(req.query);
+  // const { favorite = true } = req.query;
   const result = await Contact.findByIdAndUpdate(id, req.body, {
     new: true,
   });
