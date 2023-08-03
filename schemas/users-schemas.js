@@ -5,6 +5,7 @@ const userRegisterSchema = Joi.object({
     .pattern(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)
     .required(),
   password: Joi.string().required(),
+  avatar: Joi.string(),
 });
 
 const userLoginSchema = Joi.object({

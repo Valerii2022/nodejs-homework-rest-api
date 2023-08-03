@@ -4,21 +4,20 @@ import {
   isEmptyBody,
   isValidId,
   authenticate,
-  upload,
 } from "../../middlewares/index.js";
 import { validateBody } from "../../decorators/index.js";
 import { schemas } from "../../schemas/contacts-schema.js";
 
 const router = express.Router();
 
-router.get("/", authenticate, contactsController.getAll);
+router.use(authenticate);
 
-router.get("/:id", authenticate, isValidId, contactsController.getById);
+router.get("/", contactsController.getAll);
+
+router.get("/:id", isValidId, contactsController.getById);
 
 router.post(
   "/",
-  upload.single("avatar"),
-  authenticate,
   isEmptyBody,
   validateBody(schemas.contactsAddSchema),
   contactsController.add
@@ -26,7 +25,6 @@ router.post(
 
 router.put(
   "/:id",
-  authenticate,
   isValidId,
   isEmptyBody,
   validateBody(schemas.contactsAddSchema),
@@ -35,13 +33,12 @@ router.put(
 
 router.patch(
   "/:id/favorite",
-  authenticate,
   isValidId,
   isEmptyBody,
   validateBody(schemas.updateFavoriteSchema),
   contactsController.updateStatusContact
 );
 
-router.delete("/:id", authenticate, isValidId, contactsController.deleteById);
+router.delete("/:id", isValidId, contactsController.deleteById);
 
 export default router;

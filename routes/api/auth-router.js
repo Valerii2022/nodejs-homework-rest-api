@@ -1,6 +1,6 @@
 import express from "express";
 import authController from "../../controllers/auth-controller.js";
-import { isEmptyBody, authenticate } from "../../middlewares/index.js";
+import { isEmptyBody, authenticate, upload } from "../../middlewares/index.js";
 import { validateBody } from "../../decorators/index.js";
 import { userSchemas } from "../../schemas/users-schemas.js";
 
@@ -8,6 +8,7 @@ const authRouter = express.Router();
 
 authRouter.post(
   "/register",
+  upload.single("avatar"),
   isEmptyBody,
   validateBody(userSchemas.userRegisterSchema),
   authController.register

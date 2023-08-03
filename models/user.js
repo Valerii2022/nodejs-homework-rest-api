@@ -18,6 +18,7 @@ const userSchema = new Schema(
       default: "starter",
     },
     token: String,
+    avatar: String,
   },
   { versionKey: false }
 );

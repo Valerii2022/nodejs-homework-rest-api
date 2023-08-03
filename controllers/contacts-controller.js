@@ -1,11 +1,6 @@
-import fs from "fs/promises";
-
 import Contact from "../models/contact.js";
 import { ctrlWrapper } from "../decorators/index.js";
 import { HttpError } from "../helpers/index.js";
-import path from "path";
-
-const posterPath = path.resolve("public", "posters");
 
 const getAll = async (req, res) => {
   const { _id: owner } = req.user;
@@ -29,11 +24,7 @@ const getById = async (req, res) => {
 
 const add = async (req, res) => {
   const { _id: owner } = req.user;
-  const { path: oldPath, filename } = req.file;
-  const newPath = path.join(posterPath, filename);
-  await fs.rename(oldPath, newPath);
-  const poster = path.join("posters", filename);
-  const result = await Contact.create({ ...req.body, poster, owner });
+  const result = await Contact.create({ ...req.body, owner });
   res.status(201).json(result);
 };
 
