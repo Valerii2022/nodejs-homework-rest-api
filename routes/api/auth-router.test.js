@@ -42,6 +42,7 @@ describe("test login route", () => {
 
     expect(statusCode).toBe(200);
     expect(body.token).toBeTruthy();
+    expect(body.user).toBeTruthy();
     expect(typeof body.user).toBe("object");
     expect(body.user.email).toBeTruthy();
     expect(typeof body.user.email).toBe("string");
