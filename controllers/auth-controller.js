@@ -3,7 +3,6 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import "dotenv/config";
 import path from "path";
-import Jimp from "jimp";
 
 import User from "../models/user.js";
 
@@ -28,7 +27,6 @@ const register = async (req, res) => {
   } else {
     avatarURL = gravatar.url(email);
   }
-
   const user = await User.findOne({ email });
   if (user) {
     throw HttpError(409, "Email in use");
