@@ -8,7 +8,7 @@ import User from "../../models/user.js";
 
 const { PORT, DB_HOST_TEST } = process.env;
 
-describe("test signup route", () => {
+describe("test login route", () => {
   let server = null;
   beforeAll(async () => {
     await mongoose.connect(DB_HOST_TEST);
@@ -20,28 +20,32 @@ describe("test signup route", () => {
     server.close();
   });
 
-  beforeEach(() => {});
+  beforeEach(async () => {
+    await request(app).post("/api/users/register").send({
+      email: "bill@gmail.com",
+      password: "123456",
+    });
+  });
 
   afterEach(async () => {
     await User.deleteMany({});
   });
 
-  test("test signup with correct data", async () => {
-    const signupData = {
-      name: "Bogdan",
-      email: "bogdan@gmail.com",
+  test("test login with correct response", async () => {
+    const loginData = {
+      email: "bill@gmail.com",
       password: "123456",
     };
     const { statusCode, body } = await request(app)
-      .post("/api/auth/signup")
-      .send(signupData);
+      .post("/api/users/login")
+      .send(loginData);
 
-    expect(statusCode).toBe(201);
-    expect(body.name).toBe(signupData.name);
-    expect(body.email).toBe(signupData.email);
-
-    const user = await User.findOne({ email: signupData.email });
-    expect(user.email).toBe(signupData.email);
-    expect(user.name).toBe(signupData.name);
+    expect(statusCode).toBe(200);
+    expect(body.token).toBeTruthy();
+    expect(typeof body.user).toBe("object");
+    expect(body.user.email).toBeTruthy();
+    expect(typeof body.user.email).toBe("string");
+    expect(body.user.subscription).toBeTruthy();
+    expect(typeof body.user.subscription).toBe("string");
   });
 });

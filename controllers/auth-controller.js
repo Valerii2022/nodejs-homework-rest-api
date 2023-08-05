@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import "dotenv/config";
 import path from "path";
-// import Jimp from "jimp";
+import Jimp from "jimp";
 
 import User from "../models/user.js";
 
