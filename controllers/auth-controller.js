@@ -25,8 +25,9 @@ const register = async (req, res) => {
     await fs.rename(oldPath, newPath);
     avatarURL = path.join("avatars", filename);
   } else {
-    avatarURL = gravatar.url(email);
+    avatarURL = gravatar.url(email, { s: "250" });
   }
+
   const user = await User.findOne({ email });
   if (user) {
     throw HttpError(409, "Email in use");
