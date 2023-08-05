@@ -5,7 +5,7 @@ const userRegisterSchema = Joi.object({
     .pattern(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)
     .required(),
   password: Joi.string().required(),
-  avatar: Joi.string(),
+  avatarURL: Joi.string(),
 });
 
 const userLoginSchema = Joi.object({
@@ -19,8 +19,13 @@ const updateSubscriptionSchema = Joi.object({
   subscription: Joi.string().required(),
 });
 
+const updateAvatarSchema = Joi.object({
+  avatarURL: Joi.string(),
+});
+
 export const userSchemas = {
   userRegisterSchema,
   userLoginSchema,
   updateSubscriptionSchema,
+  updateAvatarSchema,
 };
