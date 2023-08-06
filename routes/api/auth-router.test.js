@@ -44,6 +44,7 @@ describe("test login route", () => {
     expect(body.token).toBeTruthy();
     expect(body.user).toBeTruthy();
     expect(typeof body.user).toBe("object");
+    expect(Object.keys(body.user).length).toBe(2);
     expect(body.user.email).toBeTruthy();
     expect(typeof body.user.email).toBe("string");
     expect(body.user.subscription).toBeTruthy();
