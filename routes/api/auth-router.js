@@ -1,6 +1,11 @@
 import express from "express";
 import authController from "../../controllers/auth-controller.js";
-import { isEmptyBody, authenticate } from "../../middlewares/index.js";
+import {
+  isEmptyBody,
+  authenticate,
+  upload,
+  resizeAvatar,
+} from "../../middlewares/index.js";
 import { validateBody } from "../../decorators/index.js";
 import { userSchemas } from "../../schemas/users-schemas.js";
 
@@ -8,6 +13,8 @@ const authRouter = express.Router();
 
 authRouter.post(
   "/register",
+  upload.single("avatarURL"),
+  resizeAvatar,
   isEmptyBody,
   validateBody(userSchemas.userRegisterSchema),
   authController.register
@@ -30,6 +37,15 @@ authRouter.patch(
   isEmptyBody,
   validateBody(userSchemas.updateSubscriptionSchema),
   authController.updateSubscription
+);
+
+authRouter.patch(
+  "/avatars",
+  authenticate,
+  upload.single("avatarURL"),
+  resizeAvatar,
+  validateBody(userSchemas.updateAvatarSchema),
+  authController.updateAvatar
 );
 
 export default authRouter;
