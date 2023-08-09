@@ -9,11 +9,11 @@ import User from "../models/user.js";
 
 import { ctrlWrapper } from "../decorators/index.js";
 
-import { HttpError, sendEmail } from "../helpers/index.js";
+import { HttpError, sendEmail, createVerifyEmail } from "../helpers/index.js";
 
 import gravatar from "gravatar";
 
-const { JWT_SECRET, BASE_URL } = process.env;
+const { JWT_SECRET } = process.env;
 
 const avatarPath = path.resolve("public", "avatars");
 
@@ -45,11 +45,7 @@ const register = async (req, res) => {
     verificationToken,
   });
 
-  const verifyEmail = {
-    to: email,
-    subject: "Verify email",
-    html: `<a target="_blank" href="${BASE_URL}/api/users/verify/${newUser.verificationToken}">Click verify email</a>`,
-  };
+  const verifyEmail = createVerifyEmail(email, verificationToken);
 
   await sendEmail(verifyEmail);
 
@@ -63,7 +59,7 @@ const verifyEmail = async (req, res) => {
   const { verificationToken } = req.params;
   const user = await User.findOne({ verificationToken });
   if (!user) {
-    throw HttpError(401, "Email not found");
+    throw HttpError(404, "User not found");
   }
   await User.findByIdAndUpdate(user._id, {
     verify: true,
@@ -71,7 +67,7 @@ const verifyEmail = async (req, res) => {
   });
 
   res.json({
-    message: "Email verify success",
+    message: "Verification successful",
   });
 };
 
@@ -82,19 +78,14 @@ const resendVerifyEmail = async (req, res) => {
     throw HttpError(401, "Email not found");
   }
   if (user.verify) {
-    throw HttpError(401, "Email already verify");
+    throw HttpError(400, "Verification has already been passed");
   }
-
-  const verifyEmail = {
-    to: email,
-    subject: "Verify email",
-    html: `<a target="_blank" href="${BASE_URL}/api/users/verify/${user.verificationToken}">Click verify email</a>`,
-  };
+  const verifyEmail = createVerifyEmail(email, user.verificationToken);
 
   await sendEmail(verifyEmail);
 
   res.json({
-    message: "Verify email send success",
+    message: "Verification email sent",
   });
 };
 
