@@ -23,9 +23,19 @@ const updateAvatarSchema = Joi.object({
   avatarURL: Joi.string(),
 });
 
+const emailSchema = Joi.object({
+  email: Joi.string()
+    .pattern(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)
+    .required()
+    .messages({
+      "any.required": "missing required field email",
+    }),
+});
+
 export const userSchemas = {
   userRegisterSchema,
   userLoginSchema,
   updateSubscriptionSchema,
   updateAvatarSchema,
+  emailSchema,
 };
